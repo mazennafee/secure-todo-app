@@ -1,1 +1,4 @@
-node_modules/
+# Local env files
+.env
+backend/.env
+frontend/.env.localnode_modules/
