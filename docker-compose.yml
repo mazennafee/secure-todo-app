@@ -1,0 +1,79 @@
+# Docker Compose configuration for Secure ToDo App
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: todo-db
+    environment:
+      POSTGRES_USER: todo
+      POSTGRES_PASSWORD: VeryStrongPassword2025
+      POSTGRES_DB: todo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/scripts/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - todo-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: todo-backend
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: todo
+      DB_PASSWORD: VeryStrongPassword2025
+      DB_NAME: todo
+      DATABASE_URL: postgresql://todo:VeryStrongPassword2025@db:5432/todo
+      JWT_SECRET: 9f2b4c6d8e1a3b5c7d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      FRONTEND_ORIGIN: http://localhost:3000
+      BCRYPT_ROUNDS: 12
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - todo-network
+    volumes:
+      - todo_uploads:/app/uploads
+      # - ./backend:/app
+      # - /app/node_modules
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: todo-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - todo-network
+
+volumes:
+  postgres_data:
+    name: todo-postgres-data
+  todo_uploads:
+    name: todo-uploads-data
+
+networks:
+  todo-network:
+    name: todo-network
+    driver: bridge

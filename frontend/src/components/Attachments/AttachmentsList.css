@@ -1,0 +1,74 @@
+/* frontend/src/components/Attachments/AttachmentsList.css */
+.attachments-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.attachments-section h4 {
+    margin: 0 0 0.75rem 0;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.attachments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s;
+}
+
+.attachment-item:hover {
+    background: #f0f4ff;
+    border-color: #667eea;
+}
+
+.file-icon {
+    font-size: 1.5rem;
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.file-meta {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 0.25rem;
+}
+
+.file-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.download-btn,
+.delete-file-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: transform 0.2s;
+}
+
+.download-btn:hover,
+.delete-file-btn:hover {
+    transform: scale(1.2);
+}
